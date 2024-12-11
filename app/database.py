@@ -1,14 +1,24 @@
-from app.models import fake_users_db
-from app.schemas import UserCreate, User
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
 
-def create_user(user_data: UserCreate) -> User:
-    new_user = {
-        "id": len(fake_users_db) + 1,
-        "name": user_data.name,
-        "email": user_data.email,
-    }
-    fake_users_db.append(new_user)
-    return User(**new_user)
+# Настройка базы данных
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"  # Используем SQLite для простоты
 
-def get_users() -> list:
-    return fake_users_db
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+# Модель User для базы данных
+class UserModel(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    email = Column(String, unique=True, index=True)
+
+# Создание таблиц в базе данных
+def init_db():
+    Base.metadata.create_all(bind=engine)
