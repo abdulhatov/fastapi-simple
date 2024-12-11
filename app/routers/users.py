@@ -14,7 +14,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/", response_model=User)
+@router.post("/", response_model=UserCreate)
 def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
     return UserService.create_user(user, db)
 

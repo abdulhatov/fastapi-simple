@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: test_user     # Имя пользователя
+      POSTGRES_PASSWORD: test_password  # Пароль пользователя
+      POSTGRES_DB: test_db        # Имя базы данных
+    ports:
+      - "5432:5432"

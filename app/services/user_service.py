@@ -1,5 +1,6 @@
-from app.database import SessionLocal, UserModel, init_db
+
 from app.schemas import UserCreate, User
+from app.database import SessionLocal, UserModel, init_db
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -15,7 +16,7 @@ class UserService:
         except IntegrityError:
             db.rollback()
             raise ValueError("Email is already registered")
-        return User(id=db_user.id, name=db_user.name, email=db_user.email)
+        return UserModel(id=db_user.id, name=db_user.name, email=db_user.email)
 
     @staticmethod
     def get_users(db: Session) -> list:
